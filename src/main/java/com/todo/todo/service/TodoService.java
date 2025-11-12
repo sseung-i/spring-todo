@@ -2,13 +2,13 @@ package com.todo.todo.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.todo.todo.dto.CreateTodo;
 import com.todo.todo.dto.TodoDetailDto;
 import com.todo.todo.dto.TodoListItemDto;
-import com.todo.todo.dto.TrashTodoDto;
+import com.todo.todo.dto.TodoRequestDto;
 import com.todo.todo.entity.Todo;
 import com.todo.todo.entity.TrashTodo;
 import com.todo.todo.repository.TodoRepository;
@@ -26,7 +26,7 @@ public class TodoService {
     private final TrashTodoRepository trashTodoRepository;
 
     @Transactional
-    public CreateTodo.Response createTodo(CreateTodo.Request request) {
+    public TodoDetailDto createTodo(TodoRequestDto.CreateTodo request) {
         Todo todo = Todo.builder()
                 .title(request.getTitle())
                 .content(request.getContent())
@@ -38,7 +38,7 @@ public class TodoService {
 
         todoRepository.save(todo);
 
-        return CreateTodo.Response.fromEntity(todo);
+        return TodoDetailDto.fromEntity(todo);
 
     }
 
@@ -79,6 +79,20 @@ public class TodoService {
         trashTodoRepository.save(trashTodo);
 
         return TodoDetailDto.fromEntity(todo);
+    }
+
+    @Transactional
+    public TodoDetailDto editTodo(Long todoId, TodoRequestDto.EditTodo request) {
+        Todo todo = todoRepository.findById(todoId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 Todo가 존재하지 않습니다. id=" + todoId));
+
+        Optional.ofNullable(request.getTitle()).ifPresent(todo::setTitle);
+        Optional.ofNullable(request.getContent()).ifPresent(todo::setContent);
+        Optional.ofNullable(request.getStartDate()).ifPresent(todo::setStartDate);
+        Optional.ofNullable(request.getEndDate()).ifPresent(todo::setEndDate);
+
+        return TodoDetailDto.fromEntity(todo);
+
     }
 
     @Transactional

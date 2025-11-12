@@ -16,11 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.todo.todo.dto.CreateTodo;
 import com.todo.todo.dto.TodoDetailDto;
 import com.todo.todo.dto.TodoListItemDto;
+import com.todo.todo.dto.TodoRequestDto;
 import com.todo.todo.service.TodoService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @Slf4j
 @RestController
@@ -48,8 +50,14 @@ public class TodoController {
     };
 
     @PostMapping("/todo")
-    public CreateTodo.Response createTodo(@Valid @RequestBody CreateTodo.Request request) {
+    public TodoDetailDto createTodo(@Valid @RequestBody TodoRequestDto.CreateTodo request) {
         return todoService.createTodo(request);
+    }
+
+    @PutMapping("/todo/{todoId}")
+    public TodoDetailDto editTodo(@PathVariable Long todoId, @RequestBody TodoRequestDto.EditTodo request) {
+
+        return todoService.editTodo(todoId, request);
     }
 
     @DeleteMapping("/todo/{todoId}")
