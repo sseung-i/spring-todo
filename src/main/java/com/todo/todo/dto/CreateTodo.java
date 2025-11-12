@@ -1,7 +1,6 @@
 package com.todo.todo.dto;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import com.todo.todo.entity.Todo;
 

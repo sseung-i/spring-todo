@@ -17,15 +17,16 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder
 @ToString
-public class TodoDto {
+public class TodoDetailDto {
     private String title;
     private String content;
     private LocalDate startDate;
     private LocalDate endDate;
     private Boolean isDone;
 
-    public static TodoDto fromEntity(Todo todo) {
-        return TodoDto.builder()
+    public static TodoDetailDto fromEntity(Todo todo) {
+
+        return TodoDetailDto.builder()
                 .title(todo.getTitle())
                 .content(todo.getContent())
                 .startDate(todo.getStartDate())
@@ -33,4 +34,5 @@ public class TodoDto {
                 .isDone(todo.getIsDone())
                 .build();
     }
+
 }

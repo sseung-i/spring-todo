@@ -20,6 +20,15 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
                OR (t.startDate IS NULL AND t.endDate   IS NOT NULL AND t.endDate   >= :targetDate)
                OR (t.startDate IS NOT NULL AND t.endDate IS NOT NULL
                    AND t.startDate <= :targetDate AND t.endDate >= :targetDate)
+                   AND t.isDeleted = false
             """)
     List<Todo> findTodosByDateBetween(@Param("targetDate") LocalDate targetDate);
+
+    @Query("""
+              SELECT t
+              FROM Todo t
+              WHERE t.isDeleted = false
+            """)
+    List<Todo> findTodosByNotIsDeleted(@Param("targetDate") LocalDate targetDate);
+
 }

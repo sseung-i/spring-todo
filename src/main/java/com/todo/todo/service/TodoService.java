@@ -6,9 +6,13 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.todo.todo.dto.CreateTodo;
-import com.todo.todo.dto.TodoDto;
+import com.todo.todo.dto.TodoDetailDto;
+import com.todo.todo.dto.TodoListItemDto;
+import com.todo.todo.dto.TrashTodoDto;
 import com.todo.todo.entity.Todo;
+import com.todo.todo.entity.TrashTodo;
 import com.todo.todo.repository.TodoRepository;
+import com.todo.todo.repository.TrashTodoRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class TodoService {
     private final TodoRepository todoRepository;
+    private final TrashTodoRepository trashTodoRepository;
 
     @Transactional
     public CreateTodo.Response createTodo(CreateTodo.Request request) {
@@ -28,6 +33,7 @@ public class TodoService {
                 .startDate(request.getStartDate())
                 .endDate(request.getEndDate())
                 .isDone(false)
+                .isDeleted(false)
                 .build();
 
         todoRepository.save(todo);
@@ -36,15 +42,42 @@ public class TodoService {
 
     }
 
-    public List<TodoDto> getTodos(LocalDate targetDate) {
+    public List<TodoListItemDto> getTodos(LocalDate targetDate) {
         log.info("getTodos targetDate : " + targetDate);
         List<Todo> rows = (targetDate == null) ? todoRepository.findAll()
                 : todoRepository.findTodosByDateBetween(targetDate);
 
-        return rows.stream().map(TodoDto::fromEntity).toList();
+        return rows.stream().map(TodoListItemDto::fromEntity).toList();
     }
 
-    // public List<TodoDto> deleteTodo(Integer todoId) {
-    // // 삭제하면 휴지통으로 이동
-    // }
+    public TodoDetailDto getTodo(Long id) {
+
+        // repository에서 반환타입은 Todo, getTodo가 반환하는건 TodoDetailDto
+        // findById는 Optional<Todo>를 반환하기 때문에 후처리 필요
+        return todoRepository.findById(id)
+                .map(TodoDetailDto::fromEntity)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 Todo가 존재하지 않습니다. id=" + id));
+    }
+
+    @Transactional
+    public TodoDetailDto deleteTodo(Long todoId) {
+
+        Todo todo = todoRepository.findById(todoId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 Todo가 존재하지 않습니다. id=" + todoId));
+
+        todo.setIsDeleted(true);
+
+        TrashTodo trashTodo = TrashTodo.builder()
+                .todoId(todoId)
+                .title(todo.getTitle())
+                .content(todo.getContent())
+                .startDate(todo.getStartDate())
+                .endDate(todo.getEndDate())
+                .isDone(todo.getIsDone())
+                .build();
+
+        trashTodoRepository.save(trashTodo);
+
+        return TodoDetailDto.fromEntity(todo);
+    }
 }

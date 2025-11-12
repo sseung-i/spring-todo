@@ -3,14 +3,18 @@ package com.todo.todo.controller;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.data.repository.query.Param;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.todo.todo.dto.CreateTodo;
-import com.todo.todo.dto.TodoDto;
+import com.todo.todo.dto.TodoDetailDto;
+import com.todo.todo.dto.TodoListItemDto;
 import com.todo.todo.service.TodoService;
 
 import jakarta.validation.Valid;
@@ -30,13 +34,27 @@ public class TodoController {
     }
 
     @GetMapping("/todos")
-    public List<TodoDto> getTodos(@RequestParam(required = false) LocalDate date) {
+    public List<TodoListItemDto> getTodos(@RequestParam(required = false) LocalDate date) {
         return todoService.getTodos(date);
     }
+
+    @GetMapping("/todo/{todoId}")
+    public TodoDetailDto getTodoDetail(@PathVariable Long todoId) {
+
+        log.info("GET /todo/{} HTTP/1.1", todoId);
+
+        return todoService.getTodo(todoId);
+    };
 
     @PostMapping("/todo")
     public CreateTodo.Response createTodo(@Valid @RequestBody CreateTodo.Request request) {
         return todoService.createTodo(request);
+    }
+
+    @DeleteMapping("/todo/{todoId}")
+    public TodoDetailDto deleteTodo(@PathVariable Long todoId) {
+
+        return todoService.deleteTodo(todoId);
     }
 
 }
