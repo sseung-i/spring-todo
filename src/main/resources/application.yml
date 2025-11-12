@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    # Spring 공통 설정
+    url: jdbc:postgresql://localhost:5432/todo_db # ← DB명에 맞게 변경
+    username: myuser # ← 사용자명
+    password: mypassword # ← 비밀번호
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      # hikari 전용 옵션(선택)
+      # jdbcUrl 를 별도로 쓰고 싶다면 아래처럼 가능하지만,
+      # 위의 spring.datasource.url 만으로 충분합니다.
+      # jdbc-url: jdbc:postgresql://localhost:5432/mydb
+      maximum-pool-size: 10
+
+  jpa:
+    show-sql: true
+    hibernate:
+      # 개발 단계는 update, 운영은 validate 권장 (스키마 관리는 Flyway 등 권장)
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+        # 부트 3.x는 자동 감지되지만 명시하고 싶으면 아래 유지
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+server:
+  error:
+    include-message: always
+    include-binding-errors: always
+    # include-stacktrace: on_param # ?trace=true 로 스택 확인
