@@ -18,6 +18,7 @@ import lombok.ToString;
 @Builder
 @ToString
 public class TodoDetailDto {
+    private Long id;
     private String title;
     private String content;
     private LocalDate startDate;
@@ -27,6 +28,7 @@ public class TodoDetailDto {
     public static TodoDetailDto fromEntity(Todo todo) {
 
         return TodoDetailDto.builder()
+                .id(todo.getId())
                 .title(todo.getTitle())
                 .content(todo.getContent())
                 .startDate(todo.getStartDate())
