@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.todo.api.mapper.TodoMapper">
+
+    <insert id="createTodo" parameterType="com.todo.api.dto.request.TodoCreateRequestDto" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO todo (
+            title,
+            content,
+            start_date,
+            end_date,
+            is_done,
+            is_deleted,
+            created_at,
+            updated_at
+        )
+        VALUES (
+            #{title},
+            #{content},
+            #{startDate},
+            #{endDate},
+            FALSE,
+            FALSE,
+            NOW(),
+            NOW()
+        );
+    </insert>
+
+    <select id="getTodoDetail" parameterType="long" resultType="com.todo.api.dto.response.TodoDetailResponseDto">
+        SELECT
+            id,
+            title,
+            content,
+            start_date   AS startDate,
+            end_date     AS endDate,
+            is_done      AS isDone,
+            is_deleted   AS isDeleted
+        FROM todo
+        WHERE id = #{id}
+    </select>
+
+    <select id="getTodos" resultType="com.todo.api.dto.response.TodoListResponseDto">
+        SELECT
+            id,
+            title,
+            start_date   AS startDate,
+            end_date     AS endDate,
+            is_done      AS isDone
+        FROM todo
+        <where>
+         is_deleted = false
+        <if test="targetDate != null">
+            AND (
+                <![CDATA[
+                (end_date IS NULL
+                AND start_date IS NOT NULL
+                AND start_date <= #{targetDate})
+                OR
+                (start_date IS NULL
+                AND end_date IS NOT NULL
+                AND end_date >= #{targetDate})
+                OR
+                (start_date IS NOT NULL
+                AND end_date IS NOT NULL
+                AND start_date <= #{targetDate}
+                AND end_date >= #{targetDate})
+                ]]>
+            )
+        </if>
+        </where>
+    </select>
+
+    <update id="editTodo">
+        UPDATE todo
+        <set>
+            <if test="req.containsKey('title')">
+                title = #{req.title},
+            </if>
+            <if test="req.containsKey('content')">
+                content = #{req.content},
+            </if>
+            <if test="req.containsKey('startDate')">
+                start_date = CAST(#{req.startDate} AS DATE),
+            </if>
+            <if test="req.containsKey('endDate')">
+                end_date = CAST(#{req.endDate} AS DATE),
+            </if>
+            <!-- 항상 업데이트 -->
+            updated_at = NOW()
+        </set>
+        WHERE id = #{id} and is_deleted = false
+    </update>
+
+    <update id="deleteTodo" parameterType="long">
+        UPDATE todo
+        SET is_deleted = true,
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <insert id="createTrashTodo" parameterType="com.todo.api.dto.request.TrashTodoCreateRequestDto" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO trash_todo (
+            todo_id,
+            title,
+            content,
+            start_date,
+            end_date,
+            is_done,
+            created_at
+        )
+        VALUES (
+            #{todoId},
+            #{title},
+            #{content},
+            #{startDate},
+            #{endDate},
+            #{isDone},
+            NOW()
+        );
+    </insert>
+
+ 
+
+    <update id="revertTodo" parameterType="long">
+        UPDATE todo
+        SET is_deleted = false,
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+
+
+</mapper>
+
