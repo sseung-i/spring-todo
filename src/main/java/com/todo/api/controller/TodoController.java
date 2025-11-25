@@ -11,6 +11,7 @@ import java.util.Map;
 import org.springframework.web.bind.annotation.*;
 
 import com.todo.api.dto.request.TodoCreateRequestDto;
+import com.todo.api.dto.request.TodoEditRequestDto;
 import com.todo.api.dto.response.TodoDetailResponseDto;
 import com.todo.api.dto.response.TodoListResponseDto;
 import com.todo.api.dto.response.TrashTodoDetailResponseDto;
@@ -43,7 +44,7 @@ public class TodoController {
 
     @PutMapping("/{id}")
     public TodoDetailResponseDto editTodo(@PathVariable(value = "id") Long id,
-            @Valid @RequestBody Map<String, Object> req) {
+            @RequestBody Map<String, Object> req) {
 
         return todoService.editTodo(id, req);
     }

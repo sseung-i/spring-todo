@@ -5,25 +5,28 @@
 
   <select id="getTrashTodos" resultType="com.todo.api.dto.response.TrashTodoListResponseDto">
         SELECT
-            id,
-            todo_id      AS todoId,
-            title,
-            created_at   AS createdAt
-        FROM trash_todo
+            t.id            AS id,
+            t.todo_id       AS todoId,
+            o.title         AS title,
+            t.created_at    AS createdAt
+        FROM trash_todo t
+        JOIN todo o ON t.todo_id = o.id
     </select>
 
 
    <select id="getTrashTodoDetail" parameterType="long" resultType="com.todo.api.dto.response.TrashTodoDetailResponseDto">
         SELECT
-            id,
-            todo_id      AS todoId,
-            title,
-            content,
-            start_date   AS startDate,
-            end_date     AS endDate,
-            is_done      AS isDone
-        FROM trash_todo
-        WHERE id = #{id}
+            t.id            AS id,
+            t.todo_id       AS todoId,
+            o.title         AS title,
+            o.content       AS content,
+            o.start_date    AS startDate,
+            o.end_date      AS endDate,
+            o.is_done       AS isDone,
+            t.created_at    AS createdAt
+        FROM trash_todo t
+        JOIN todo o ON t.todo_id = o.id
+        WHERE t.id = #{id}
     </select>
 
     <delete id="deleteTrashTodo" parameterType="long">

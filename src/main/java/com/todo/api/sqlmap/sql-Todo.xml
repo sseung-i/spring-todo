@@ -100,20 +100,10 @@
     <insert id="createTrashTodo" parameterType="com.todo.api.dto.request.TrashTodoCreateRequestDto" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO trash_todo (
             todo_id,
-            title,
-            content,
-            start_date,
-            end_date,
-            is_done,
             created_at
         )
         VALUES (
             #{todoId},
-            #{title},
-            #{content},
-            #{startDate},
-            #{endDate},
-            #{isDone},
             NOW()
         );
     </insert>

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.todo.api.dto.request.TodoCreateRequestDto;
+import com.todo.api.dto.request.TodoEditRequestDto;
 import com.todo.api.dto.request.TrashTodoCreateRequestDto;
 import com.todo.api.dto.response.TodoDetailResponseDto;
 import com.todo.api.dto.response.TodoListResponseDto;
