@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.todo.api.todo.mapper.TrashTodoMapper">
+
+
+  <select id="getTrashTodos" resultType="com.todo.api.todo.dto.response.TrashTodoListResponseDto">
+        SELECT
+            t.id            AS id,
+            t.todo_id       AS todoId,
+            o.title         AS title,
+            t.created_at    AS createdAt
+        FROM trash_todos t
+        JOIN todos o ON t.todo_id = o.id
+    </select>
+
+
+   <select id="getTrashTodoDetail" parameterType="long" resultType="com.todo.api.todo.dto.response.TrashTodoDetailResponseDto">
+        SELECT
+            t.id            AS id,
+            t.todo_id       AS todoId,
+            o.title         AS title,
+            o.content       AS content,
+            o.start_date    AS startDate,
+            o.end_date      AS endDate,
+            o.is_done       AS isDone,
+            t.created_at    AS createdAt
+        FROM trash_todos t
+        JOIN todos o ON t.todo_id = o.id
+        WHERE t.id = #{id}
+    </select>
+
+    <delete id="deleteTrashTodo" parameterType="long">
+        DELETE FROM trash_todos
+        WHERE       id = #{id}
+    </delete>
+</mapper>
