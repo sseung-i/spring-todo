@@ -3,16 +3,9 @@ package com.todo.api.user.mapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.todo.api.user.dto.request.SignUpRequestDto;
-import com.todo.api.user.dto.request.UserAuthProviderInsertDto;
-import com.todo.api.user.dto.response.UserAuthResponseDto;
+import com.todo.api.user.dto.response.UserResponseDto;
 
 @Mapper
 public interface UserMapper {
-    void createUser(SignUpRequestDto req);
-
-    void addAuthProvider(UserAuthProviderInsertDto req);
-
-    UserAuthResponseDto passwordFindByEmail(@Param("email") String email);
-
+    UserResponseDto getUserDetail(@Param("id") Long id);
 }

@@ -11,7 +11,7 @@ import com.todo.api.user.dto.request.SignUpRequestDto;
 import com.todo.api.user.dto.request.UserAuthProviderInsertDto;
 import com.todo.api.user.dto.response.UserAuthResponseDto;
 import com.todo.api.user.dto.response.UserResponseDto;
-import com.todo.api.user.mapper.UserMapper;
+import com.todo.api.user.mapper.AuthMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,12 +19,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthService {
     private final JwtProvider jwtProvider;
-    private final UserMapper userMapper;
+    private final AuthMapper authMapper;
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public void signUp(SignUpRequestDto req) {
-        userMapper.createUser(req);
+        authMapper.createUser(req);
 
         Long userId = req.getId();
         String email = req.getEmail();
@@ -36,13 +36,14 @@ public class AuthService {
         dto.setProviderUserId(email);
         dto.setPasswordHash(hashPw);
 
-        userMapper.addAuthProvider(dto);
+        authMapper.addAuthProvider(dto);
 
     }
 
     @Transactional
     public UserResponseDto signIn(SignInRequestDto req) {
-        UserAuthResponseDto user = userMapper.passwordFindByEmail(req.getEmail());
+        UserAuthResponseDto user = authMapper.passwordFindByEmail(req.getEmail());
+
         if (user == null) {
             throw new RuntimeException("헤당 이메일의 사용자가 존재하지 않습니다.");
         }

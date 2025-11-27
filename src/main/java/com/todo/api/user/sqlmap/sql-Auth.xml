@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.todo.api.user.mapper.AuthMapper">
+ <insert id="createUser" parameterType="com.todo.api.user.dto.request.SignUpRequestDto" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO users(
+            email,
+            name,
+            status,
+            created_at,
+            updated_at
+        ) VALUES (
+            #{email},
+            #{name},
+            'ACTIVE'::user_status,
+            NOW(),
+            NOW()
+        )
+    </insert>
+
+    <insert id="addAuthProvider" parameterType="com.todo.api.user.dto.request.UserAuthProviderInsertDto">
+     INSERT INTO user_auth_providers (
+            user_id,
+            provider,
+            provider_user_id,
+            password_hash,
+            created_at,
+            updated_at
+        ) VALUES (
+            #{userId},
+            #{provider}::auth_provider_type,        <!-- ENUM provider_enum -->
+            #{providerUserId},
+            #{passwordHash},
+            NOW(),
+            NOW()
+        )
+    </insert>
+
+    <select id="passwordFindByEmail"
+            parameterType="string"
+            resultType="com.todo.api.user.dto.response.UserAuthResponseDto">
+        SELECT
+            u.id,
+            u.email,
+            a.password_hash AS passwordHash
+        FROM users u
+            JOIN user_auth_providers a ON u.id = a.user_id
+        WHERE u.email = #{email}
+            AND a.provider = 'LOCAL'
+        LIMIT 1;
+    </select>
+</mapper>

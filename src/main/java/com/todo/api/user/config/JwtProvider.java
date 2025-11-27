@@ -41,15 +41,29 @@ public class JwtProvider {
                 .compact();
     }
 
-    public Long validateAndGetUserId(String token) {
-        Claims claims = Jwts.parser()
+    private Claims parseClaims(String token) {
+        return Jwts.parser()
                 .verifyWith(secretKey)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
+    }
 
-        Long userId = Long.valueOf(claims.getSubject());
+    public Long validateAndGetUserId(String token) {
+        try {
+            return Long.valueOf(parseClaims(token).getSubject());
 
-        return Long.valueOf(userId);
+        } catch (Exception e) {
+            throw new RuntimeException("유효하지 않은 토큰입니다.", e);
+        }
+    }
+
+    public boolean isExpired(String token) {
+        try {
+            Date expiresAt = parseClaims(token).getExpiration();
+            return expiresAt.before(new Date());
+        } catch (Exception e) {
+            return true;
+        }
     }
 }
