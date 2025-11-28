@@ -12,7 +12,6 @@ import jakarta.validation.constraints.Size;
 @AllArgsConstructor
 public class TodoCreateRequestDto {
     private Long id;
-    private Long ownerId;
 
     @NotNull(message = "title은 필수입니다.")
     @Size(max = 20)
@@ -24,4 +23,5 @@ public class TodoCreateRequestDto {
     private LocalDate startDate;
     private LocalDate endDate;
 
+    private Long groupId;
 }

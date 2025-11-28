@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import com.todo.api.todo.dto.request.TodoCreateRequestDto;
@@ -25,16 +26,19 @@ public class TodoController {
     private final TodoService todoService;
 
     @PostMapping("")
-    public TodoDetailResponseDto createTodo(@Valid @RequestBody TodoCreateRequestDto req) {
+    public TodoDetailResponseDto createTodo(
+            @RequestAttribute Long userId,
+            @Valid @RequestBody TodoCreateRequestDto req) {
 
-        TodoDetailResponseDto todo = todoService.createTodo(req);
+        TodoDetailResponseDto todo = todoService.createTodo(userId, req);
         return todo;
     }
 
     @GetMapping("/list")
     public List<TodoListResponseDto> getTodos(
-            @RequestParam(value = "date", required = false) LocalDate date) {
-        return todoService.getTodos(date);
+            @RequestAttribute Long userId,
+            @RequestParam(value = "date", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        return todoService.getTodos(userId, date);
     }
 
     @GetMapping("/{id}")

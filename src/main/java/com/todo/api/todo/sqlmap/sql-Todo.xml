@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.todo.api.todo.mapper.TodoMapper">
 
-    <insert id="createTodo" parameterType="com.todo.api.todo.dto.request.TodoCreateRequestDto" useGeneratedKeys="true" keyProperty="id">
+    <insert id="createTodo" parameterType="com.todo.api.todo.dto.request.TodoCreateRequestDto" useGeneratedKeys="true" keyProperty="req.id">
         INSERT INTO todos (
             owner_id,
             title,
@@ -16,10 +16,10 @@
         )
         VALUES (
             #{ownerId},
-            #{title},
-            #{content},
-            #{startDate},
-            #{endDate},
+            #{req.title},
+            #{req.content},
+            #{req.startDate},
+            #{req.endDate},
             FALSE,
             FALSE,
             NOW(),
@@ -41,18 +41,19 @@
         WHERE id = #{id}
     </select>
 
+    <!-- 오늘 날짜의 내가 등록/속한 todo 리스트 -->
     <select id="getTodos" resultType="com.todo.api.todo.dto.response.TodoListResponseDto">
-        SELECT
-            id,
-            owner_id    AS ownerId,
-            title,
-            start_date  AS startDate,
-            end_date    AS endDate,
-            is_done     AS isDone
-        FROM todos
+        SELECT t.*
+        FROM todos t
+        LEFT JOIN todo_group_members gm
+            ON t.group_id = gm.group_id
         <where>
          is_deleted = false
-        <if test="targetDate != null">
+         AND (
+                t.owner_id = #{userId}
+                OR gm.user_id = #{userId}
+        )
+        <if test="targetDate != null">    
             AND (
                 <![CDATA[
                 (end_date IS NULL

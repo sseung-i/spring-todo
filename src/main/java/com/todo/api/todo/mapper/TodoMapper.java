@@ -15,9 +15,9 @@ import com.todo.api.todo.dto.response.TodoListResponseDto;
 @Mapper
 public interface TodoMapper {
 
-    void createTodo(TodoCreateRequestDto req);
+    void createTodo(@Param("ownerId") Long ownerId, @Param("req") TodoCreateRequestDto req);
 
-    List<TodoListResponseDto> getTodos(@Param("targetDate") LocalDate targetDate);
+    List<TodoListResponseDto> getTodos(@Param("userId") Long userId, @Param("targetDate") LocalDate targetDate);
 
     TodoDetailResponseDto getTodoDetail(@Param("id") Long id);
 

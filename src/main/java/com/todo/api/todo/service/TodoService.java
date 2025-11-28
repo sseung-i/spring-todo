@@ -15,6 +15,7 @@ import com.todo.api.todo.dto.response.TodoListResponseDto;
 import com.todo.api.todo.dto.response.TrashTodoDetailResponseDto;
 import com.todo.api.todo.mapper.TodoMapper;
 import com.todo.api.todo.mapper.TrashTodoMapper;
+import com.todo.api.user.config.JwtProvider;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,20 +26,18 @@ import lombok.extern.slf4j.Slf4j;
 public class TodoService {
     private final TodoMapper todoMapper;
     private final TrashTodoMapper trashTodoMapper;
+    private final JwtProvider jwtProvider;
 
     @Transactional
-    public TodoDetailResponseDto createTodo(TodoCreateRequestDto req) {
+    public TodoDetailResponseDto createTodo(Long userId, TodoCreateRequestDto req) {
 
-        Long fakeOwnerId = 1L;
-        req.setOwnerId(fakeOwnerId);
-
-        todoMapper.createTodo(req);
+        todoMapper.createTodo(userId, req);
         return todoMapper.getTodoDetail(req.getId());
 
     }
 
-    public List<TodoListResponseDto> getTodos(LocalDate targetDate) {
-        return todoMapper.getTodos(targetDate);
+    public List<TodoListResponseDto> getTodos(Long userId, LocalDate targetDate) {
+        return todoMapper.getTodos(userId, targetDate != null ? targetDate : null);
 
     }
 
