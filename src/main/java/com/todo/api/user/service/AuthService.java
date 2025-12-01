@@ -10,7 +10,7 @@ import com.todo.api.user.dto.request.SignInRequestDto;
 import com.todo.api.user.dto.request.SignUpRequestDto;
 import com.todo.api.user.dto.request.UserAuthProviderInsertDto;
 import com.todo.api.user.dto.response.UserAuthResponseDto;
-import com.todo.api.user.dto.response.UserResponseDto;
+import com.todo.api.user.dto.response.UserLoginResponseDto;
 import com.todo.api.user.mapper.AuthMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -41,7 +41,7 @@ public class AuthService {
     }
 
     @Transactional
-    public UserResponseDto signIn(SignInRequestDto req) {
+    public UserLoginResponseDto signIn(SignInRequestDto req) {
         UserAuthResponseDto user = authMapper.passwordFindByEmail(req.getEmail());
 
         if (user == null) {
@@ -54,6 +54,6 @@ public class AuthService {
 
         String token = jwtProvider.createToken(user.getId(), req.getEmail());
 
-        return new UserResponseDto(user.getId(), user.getEmail(), token);
+        return new UserLoginResponseDto(user.getId(), user.getEmail(), token);
     }
 }

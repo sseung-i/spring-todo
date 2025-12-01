@@ -2,7 +2,8 @@ package com.todo.api.user.service;
 
 import org.springframework.stereotype.Service;
 
-import com.todo.api.user.dto.response.UserResponseDto;
+import com.todo.api.user.dto.response.UserDetailResponseDto;
+import com.todo.api.user.dto.response.UserLoginResponseDto;
 import com.todo.api.user.mapper.UserMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
     private final UserMapper userMapper;
 
-    public UserResponseDto getUserDetail(Long id) {
+    public UserDetailResponseDto getUserDetail(Long id) {
         return userMapper.getUserDetail(id);
     }
 

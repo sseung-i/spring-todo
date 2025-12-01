@@ -17,4 +17,75 @@
             NOW()
         );
     </insert>
+
+    <update id="editTodoGroup">
+        UPDATE todo_groups
+        <set>
+            <if test="req.containsKey('name')">
+                name = #{req.name},
+            </if>
+            <if test="req.containsKey('description')">
+                description = #{req.description},
+            </if>
+            updated_at = NOW()
+        </set>
+        WHERE id = #{groupId} AND owner_id = #{userId}
+    </update>
+
+    <select id="getTodoGroupList" parameterType="long" resultType="com.todo.api.todo.dto.response.TodoGroupSimpleDetailResponseDto">
+        SELECT DISTINCT
+            g.id,
+            g.name,
+            g.description,
+            g.owner_id AS ownerId
+        FROM todo_groups g
+        LEFT JOIN todo_group_members gm
+            ON g.id = gm.group_id
+        WHERE g.owner_id = #{userId}
+        OR gm.user_id = #{userId}
+    </select>
+
+
+    <select id="getTodoGroupMembers" parameterType="long" resultType="com.todo.api.user.dto.response.UserDetailResponseDto">
+        SELECT u.id,
+            u.email,
+            u.name
+        FROM users u
+        JOIN todo_group_members gm
+            ON gm.user_id = u.id
+        WHERE gm.group_id = #{groupId}
+    </select>
+
+    <select id="getTodoGroup"  parameterType="long" resultType="com.todo.api.todo.dto.response.TodoGroupResponseDto">
+        SELECT 
+            id,
+            name,
+            description
+        FROM todo_groups
+        WHERE id = #{groupId}
+    </select>
+
+    <select id="getTodoGroupDetail"  parameterType="long" resultType="com.todo.api.todo.dto.response.TodoGroupSimpleDetailResponseDto">
+        SELECT 
+            id,
+            name,
+            description,
+            owner_id        AS ownerId
+        FROM todo_groups
+        WHERE id = #{groupId}
+    </select>
+
+    <insert id="joinTodoGroup" parameterType="map" >
+        INSERT INTO todo_group_members (group_id, user_id, created_at)
+            VALUES (#{groupId}, #{userId}, NOW())
+    </insert>
+
+    <select id="isGroupMember" parameterType="map" resultType="boolean">
+        SELECT EXISTS (
+            SELECT 1 
+            FROM todo_group_members
+            WHERE group_id = #{groupId} 
+            AND user_id = #{userId}
+        )
+    </select>
 </mapper>

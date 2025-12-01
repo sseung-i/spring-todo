@@ -12,7 +12,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import com.todo.api.todo.dto.request.TodoCreateRequestDto;
-import com.todo.api.todo.dto.request.TodoEditRequestDto;
 import com.todo.api.todo.dto.response.TodoDetailResponseDto;
 import com.todo.api.todo.dto.response.TodoListResponseDto;
 import com.todo.api.todo.dto.response.TrashTodoDetailResponseDto;

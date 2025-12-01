@@ -11,8 +11,10 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class TodoGroupResponseDto {
+public class TodoGroupSimpleDetailResponseDto {
     private Long id;
     private String name;
     private String description;
+    private Long ownerId; // 오너 테이블 정보 가져오기
+    private List<Long> members; // 멤버 테이블 정보 가져오기
 }

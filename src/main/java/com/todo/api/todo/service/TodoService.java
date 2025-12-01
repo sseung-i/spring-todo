@@ -8,14 +8,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.todo.api.todo.dto.request.TodoCreateRequestDto;
-import com.todo.api.todo.dto.request.TodoEditRequestDto;
 import com.todo.api.todo.dto.request.TrashTodoCreateRequestDto;
 import com.todo.api.todo.dto.response.TodoDetailResponseDto;
 import com.todo.api.todo.dto.response.TodoListResponseDto;
 import com.todo.api.todo.dto.response.TrashTodoDetailResponseDto;
 import com.todo.api.todo.mapper.TodoMapper;
 import com.todo.api.todo.mapper.TrashTodoMapper;
-import com.todo.api.user.config.JwtProvider;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 public class TodoService {
     private final TodoMapper todoMapper;
     private final TrashTodoMapper trashTodoMapper;
-    private final JwtProvider jwtProvider;
 
     @Transactional
     public TodoDetailResponseDto createTodo(Long userId, TodoCreateRequestDto req) {

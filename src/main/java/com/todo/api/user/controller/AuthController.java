@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.todo.api.user.dto.request.SignInRequestDto;
 import com.todo.api.user.dto.request.SignUpRequestDto;
-import com.todo.api.user.dto.response.UserResponseDto;
+import com.todo.api.user.dto.response.UserLoginResponseDto;
 import com.todo.api.user.service.AuthService;
 
 import jakarta.validation.Valid;
@@ -27,7 +27,7 @@ public class AuthController {
     }
 
     @PostMapping("/sign-in")
-    public UserResponseDto signIn(@Valid @RequestBody SignInRequestDto req) {
+    public UserLoginResponseDto signIn(@Valid @RequestBody SignInRequestDto req) {
 
         return authService.signIn(req);
     }
