@@ -12,6 +12,7 @@ import com.todo.api.user.dto.request.UserAuthProviderInsertDto;
 import com.todo.api.user.dto.response.UserAuthResponseDto;
 import com.todo.api.user.dto.response.UserLoginResponseDto;
 import com.todo.api.user.mapper.AuthMapper;
+import com.todo.api.utils.hash.Hash;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,6 +22,7 @@ public class AuthService {
     private final JwtProvider jwtProvider;
     private final AuthMapper authMapper;
     private final PasswordEncoder passwordEncoder;
+    private final Hash myHash;
 
     @Transactional
     public void signUp(SignUpRequestDto req) {
@@ -28,13 +30,13 @@ public class AuthService {
 
         Long userId = req.getId();
         String email = req.getEmail();
-        String hashPw = passwordEncoder.encode(req.getPassword());
+        String encryptPassword = passwordEncoder.encode(req.getPassword());
 
         UserAuthProviderInsertDto dto = new UserAuthProviderInsertDto();
         dto.setUserId(userId);
         dto.setProvider(UserEnum.UserProviderType.LOCAL);
         dto.setProviderUserId(email);
-        dto.setPasswordHash(hashPw);
+        dto.setEncryptPassword(encryptPassword);
 
         authMapper.addAuthProvider(dto);
 
@@ -48,11 +50,14 @@ public class AuthService {
             throw new RuntimeException("헤당 이메일의 사용자가 존재하지 않습니다.");
         }
 
-        if (!passwordEncoder.matches(req.getPassword(), user.getPasswordHash())) {
+        if (!passwordEncoder.matches(req.getPassword(), user.getEncryptPassword())) {
             throw new RuntimeException("비밀번호가 일치하지 않습니다.");
         }
 
         String token = jwtProvider.createToken(user.getId(), req.getEmail());
+        String hash = myHash.getHashByToken(token);
+
+        authMapper.addRefreshHash(user.getId(), hash);
 
         return new UserLoginResponseDto(user.getId(), user.getEmail(), token);
     }

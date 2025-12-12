@@ -2,6 +2,7 @@ package com.todo.api.todo.dto.request;
 
 import com.todo.api.todo.dto.response.TodoDetailResponseDto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 @Getter
@@ -10,6 +11,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class TrashTodoCreateRequestDto {
+    @Schema(hidden = true)
     private Long id;
     private Long todoId;
 

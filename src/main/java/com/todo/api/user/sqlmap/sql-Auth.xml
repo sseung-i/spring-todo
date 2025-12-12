@@ -22,14 +22,14 @@
             user_id,
             provider,
             provider_user_id,
-            password_hash,
+            encrypt_password,
             created_at,
             updated_at
         ) VALUES (
             #{userId},
             #{provider}::auth_provider_type,        <!-- ENUM provider_enum -->
             #{providerUserId},
-            #{passwordHash},
+            #{encryptPassword},
             NOW(),
             NOW()
         )
@@ -41,11 +41,17 @@
         SELECT
             u.id,
             u.email,
-            a.password_hash AS passwordHash
+            a.encrypt_password AS encryptPassword
         FROM users u
             JOIN user_auth_providers a ON u.id = a.user_id
         WHERE u.email = #{email}
             AND a.provider = 'LOCAL'
         LIMIT 1;
     </select>
+
+    <update id="addRefreshHash">
+        UPDATE users
+        SET refresh_token_hash = #{hash}
+        WHERE id = #{id}
+    </update>
 </mapper>

@@ -9,5 +9,5 @@ public class UserAuthProviderInsertDto {
     private Long userId;
     private UserEnum.UserProviderType provider;
     private String providerUserId;
-    private String passwordHash;
+    private String encryptPassword;
 }

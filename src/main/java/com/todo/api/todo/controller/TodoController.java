@@ -17,6 +17,8 @@ import com.todo.api.todo.dto.response.TodoListResponseDto;
 import com.todo.api.todo.dto.response.TrashTodoDetailResponseDto;
 import com.todo.api.todo.service.TodoService;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -25,6 +27,7 @@ public class TodoController {
     private final TodoService todoService;
 
     @PostMapping("")
+    @Operation(summary = "todo 생성")
     public TodoDetailResponseDto createTodo(
             @RequestAttribute Long userId,
             @Valid @RequestBody TodoCreateRequestDto req) {
@@ -34,6 +37,7 @@ public class TodoController {
     }
 
     @GetMapping("/list")
+    @Operation(summary = "todo 리스트 조회")
     public List<TodoListResponseDto> getTodos(
             @RequestAttribute Long userId,
             @RequestParam(value = "date", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
@@ -41,11 +45,13 @@ public class TodoController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "todo 조회")
     public TodoDetailResponseDto getTodoDetail(@PathVariable(value = "id") Long id) {
         return todoService.getTodoDetail(id);
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "todo 수정")
     public TodoDetailResponseDto editTodo(@PathVariable(value = "id") Long id,
             @RequestBody Map<String, Object> req) {
 
@@ -53,11 +59,13 @@ public class TodoController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "todo 삭제")
     public TrashTodoDetailResponseDto deleteTodo(@PathVariable(value = "id") Long id) {
         return todoService.deleteTodo(id);
     }
 
     @PatchMapping("/revert/{trashTodoId}")
+    @Operation(summary = "임시삭제중인 todo 되돌리기")
     public TodoDetailResponseDto revertTodo(@PathVariable(value = "trashTodoId") Long trashTodoId) {
         return todoService.revertTodo(trashTodoId);
     }

@@ -11,6 +11,7 @@ import com.todo.api.todo.dto.response.TodoGroupDetailResponseDto;
 import com.todo.api.todo.dto.response.TodoGroupResponseDto;
 import com.todo.api.todo.service.TodoGroupService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -28,17 +29,20 @@ public class TodoGroupContoller {
     private final TodoGroupService todoGroupService;
 
     @GetMapping("/list")
+    @Operation(summary = "todo 그룹 리스트 조회")
     public List<TodoGroupDetailResponseDto> getTodoGroupList(@RequestAttribute Long userId) {
         return todoGroupService.getTodoGroupList(userId);
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "todo 그룹 조회")
     public TodoGroupDetailResponseDto getTodoGroupDetail(@RequestAttribute Long userId,
             @PathVariable Long id) {
         return todoGroupService.getTodoGroupDetail(id);
     }
 
     @PostMapping("")
+    @Operation(summary = "todo 그룹 생성")
     public Long createTodoGroup(
             @RequestAttribute Long userId,
             @Valid @RequestBody TodoGroupCreateRequest req) {
@@ -48,6 +52,7 @@ public class TodoGroupContoller {
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "todo 그룹 수정")
     public TodoGroupResponseDto modifyTodoGroup(
             @RequestAttribute Long userId,
             @PathVariable Long id,
@@ -57,6 +62,7 @@ public class TodoGroupContoller {
     }
 
     @PostMapping("/{id}/join")
+    @Operation(summary = "todo 그룹 가입")
     public TodoGroupDetailResponseDto joinTodoGroup(@RequestAttribute Long userId, @PathVariable Long id) {
         return todoGroupService.joinTodoGroup(userId, id);
 

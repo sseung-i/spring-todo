@@ -15,4 +15,6 @@ public interface AuthMapper {
     void addAuthProvider(UserAuthProviderInsertDto req);
 
     UserAuthResponseDto passwordFindByEmail(@Param("email") String email);
+
+    void addRefreshHash(@Param("id") Long id, @Param("hash") String hash);
 }

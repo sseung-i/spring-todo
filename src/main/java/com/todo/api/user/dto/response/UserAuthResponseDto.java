@@ -6,5 +6,5 @@ import lombok.Data;
 public class UserAuthResponseDto {
     private Long id;
     private String email;
-    private String passwordHash;
+    private String encryptPassword;
 }

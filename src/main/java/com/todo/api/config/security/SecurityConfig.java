@@ -1,4 +1,4 @@
-package com.todo.api.config;
+package com.todo.api.config.security;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ import com.todo.api.user.config.JwtAuthFilter;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtAuthFilter jwtAuthFilter;
+    // private final JwtAuthFilter jwtAuthFilter;
 
     @Bean
     @Order(0)
@@ -37,30 +37,23 @@ public class SecurityConfig {
                 .formLogin(f -> f.disable())
                 .httpBasic(b -> b.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // swagger 허용
-                        .requestMatchers(
-                                "/swagger-ui/**",
-                                "/swagger-ui/index.html",
-                                "/swagger-ui.html")
-                        .permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/error").permitAll()
-                        // .requestMatchers("/v1/admin/users/**").hasRole("ADMIN") Role 체크시 사용
-                        .anyRequest().permitAll())
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                        .anyRequest().permitAll());
 
         return http.build();
     }
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
-    }
+    // @Bean
+    // public AuthenticationManager
+    // authenticationManager(AuthenticationConfiguration config) throws Exception {
+    // return config.getAuthenticationManager();
+    // }
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring()
-                .requestMatchers("/health", "/health-check", "/error");
-    }
+    // @Bean
+    // public WebSecurityCustomizer webSecurityCustomizer() {
+    // return (web) -> web.ignoring()
+    // .requestMatchers("/health", "/health-check", "/error");
+    // }
 
 }

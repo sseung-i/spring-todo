@@ -2,6 +2,7 @@ package com.todo.api.todo.dto.request;
 
 import java.time.LocalDate;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -11,6 +12,7 @@ import jakarta.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TodoCreateRequestDto {
+    @Schema(hidden = true)
     private Long id;
 
     @NotNull(message = "title은 필수입니다.")
