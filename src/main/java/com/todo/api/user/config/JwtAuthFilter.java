@@ -13,16 +13,20 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
-// @Component
+@Component
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider;
 
     private static final AntPathMatcher pathMatcher = new AntPathMatcher();
 
-    private final List<String> WHITE_LIST = List.of("/v1/sign-*", "/swagger-ui/**",
+    private final List<String> WHITE_LIST = List.of("/v1/sign-*",
+
+            // swagger
+            "/swagger-ui/**",
+            "/swagger-ui.html",
             "/swagger-ui/index.html",
-            "/swagger-ui.html");
+            "/v3/api-docs/**");
 
     private boolean isWhitelist(String path) {
         return WHITE_LIST.stream().anyMatch(pattern -> pathMatcher.match(pattern, path));

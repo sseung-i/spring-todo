@@ -20,7 +20,7 @@ public class UserController {
 
     @GetMapping("")
     @Operation(summary = "회원정보 조회")
-    public UserDetailResponseDto getUserDetail(@RequestAttribute Long userId) {
+    public UserDetailResponseDto getUserDetail(@RequestAttribute("userId") Long userId) {
         return userService.getUserDetail(userId);
     }
 
